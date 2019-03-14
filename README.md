@@ -1,6 +1,6 @@
-#Aprendizagem de Maquina
+# Aprendizagem de Maquina
 ## ml-class
-####Prof. Eduardo Bezerra
+#### Prof. Eduardo Bezerra
 
 Exercícios para o estudo das tecnicas de aprendizagem de máquina.
 
