@@ -1,9 +1,8 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from Parte1.custo_reglin_uni import custo_reglin_uni
 
-def plot(data, theta):
+def plot(X, y, theta):
     # Valores de theta0 e theta1 informados no enunciado do trabalho
     theta0 = np.arange(-10, 10, 0.01)
     theta1 = np.arange(-1, 4, 0.01)
@@ -15,7 +14,7 @@ def plot(data, theta):
     for i in range(len(theta0)):
         for j in range(len(theta1)):
             t = [[theta0[i]], [theta1[j]]]
-            J[i,j] = custo_reglin_uni(data.X, data.y, t)
+            J[i,j] = custo_reglin_uni(X, y, t)
 
     # Transpoe J devido as funcoes contour/meshgrid
     J = np.transpose(J)

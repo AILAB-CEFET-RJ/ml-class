@@ -1,6 +1,4 @@
 import numpy as np
-from Parte2.custo_reglin_multi import custo_reglin_multi
-
 
 def gd(X, y, alpha, epochs, theta=np.array([0,0,0], ndmin = 2).T):
 
