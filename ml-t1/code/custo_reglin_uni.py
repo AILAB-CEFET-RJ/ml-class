@@ -9,6 +9,3 @@ def custo_reglin_uni(X, y, theta):
     J = (np.sum((X.dot(theta) - y)**2)) / (2 * m)
 
     return J
-
-
-
