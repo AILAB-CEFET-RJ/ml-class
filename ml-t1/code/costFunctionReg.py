@@ -1,5 +1,5 @@
 def costFunctionReg(theta, X, y, lambda_):
-  m = y.size #número de interações
+  m = y.size
   J = 0
   grad = np.zeros(theta.shape)
   h = sigmoide(X.dot(theta.T))
