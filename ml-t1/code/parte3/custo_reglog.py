@@ -1,7 +1,6 @@
 import numpy as np
 from util.sigmoide import sigmoide
 
-
 def custo_reglog(theta, X, y):
     theta = np.matrix(theta)
     X = np.matrix(X)

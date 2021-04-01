@@ -1,6 +1,6 @@
 import numpy as np
 
-def polyFeatures(X, p):
+def poly_features(X, p):
     
     X_poly = np.zeros((X.shape[0], p))
     for i in range(p):

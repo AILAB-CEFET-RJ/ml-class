@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from custo_reglin_uni import custo_reglin_uni
 
 def plot(X, y, theta):
     # Valores de theta0 e theta1 informados no enunciado do trabalho

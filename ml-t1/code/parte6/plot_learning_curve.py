@@ -15,9 +15,3 @@ def plot_learning_curve(x,y_treino, y_val, titulo=None):
     plt.title(titulo)
     
     plt.show()
-
-theta = np.array([[1,1]]) #inicialização
-numero_exemplos, erros_treino, erros_val = learningCurve(theta, X, y, Xval, yval, _lambda=0)
-
-titulo = 'Curva de aprendizado para regressão linear'
-plot_learning_curve(numero_exemplos,erros_treino, erros_val, titulo)

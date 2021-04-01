@@ -1,3 +1,5 @@
+import numpy as np
+
 def mapFeature(x1, x2, degree=6):
 
     if x1.ndim > 0:
