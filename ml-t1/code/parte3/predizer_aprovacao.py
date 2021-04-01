@@ -1,5 +1,5 @@
 import numpy as np
-from Parte3.sigmoide import sigmoide
+from util.sigmoide import sigmoide
 
 def predizer(theta, X):
     probabilidade = sigmoide(X * theta.T)

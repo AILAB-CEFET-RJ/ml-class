@@ -1,3 +1,5 @@
+import numpy as np
+
 def polyFeatures(X, p):
     
     X_poly = np.zeros((X.shape[0], p))

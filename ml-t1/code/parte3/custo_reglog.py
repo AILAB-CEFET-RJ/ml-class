@@ -1,5 +1,5 @@
 import numpy as np
-from Parte3.sigmoide import sigmoide
+from util.sigmoide import sigmoide
 
 
 def custo_reglog(theta, X, y):
