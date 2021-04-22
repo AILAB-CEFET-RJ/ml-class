@@ -5,6 +5,23 @@ import matplotlib.mlab as mlab
 from scipy.io import loadmat  
 from scipy import stats 
 
+# Source: https://github.com/Grzego/handwriting-generation/issues/16 
+def bivariate_normal(X, Y, sigmax=1.0, sigmay=1.0,
+                     mux=0.0, muy=0.0, sigmaxy=0.0):
+    """
+    Bivariate Gaussian distribution for equal shape *X*, *Y*.
+    See `bivariate normal
+    <http://mathworld.wolfram.com/BivariateNormalDistribution.html>`_
+    at mathworld.
+    """
+    Xmu = X-mux
+    Ymu = Y-muy
+
+    rho = sigmaxy/(sigmax*sigmay)
+    z = Xmu**2/sigmax**2 + Ymu**2/sigmay**2 - 2*rho*Xmu*Ymu/(sigmax*sigmay)
+    denom = 2*np.pi*sigmax*sigmay*np.sqrt(1-rho**2)
+    return np.exp(-z/(2*(1-rho**2))) / denom
+
 def estimate_gaussian_params(X):  
 	########################
 	# SEU CODIGO AQUI :
@@ -50,7 +67,7 @@ def main():
 	x = np.arange(0, 25, .025)
 	y = np.arange(0, 25, .025)
 	first_axis, second_axis = np.meshgrid(x, y)
-	Z = mlab.bivariate_normal(first_axis, second_axis, np.sqrt(sigma2[0]), np.sqrt(sigma2[1]), mu[0], mu[1])
+	Z = bivariate_normal(first_axis, second_axis, np.sqrt(sigma2[0]), np.sqrt(sigma2[1]), mu[0], mu[1])
 	plt.contour(first_axis, second_axis, Z, 10, cmap=plt.cm.jet)
 	plt.axis('equal')
 	plt.show()
