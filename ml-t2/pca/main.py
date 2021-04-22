@@ -1,95 +1,84 @@
 import pandas as pd
 import numpy as np
 from scipy.optimize import minimize
-import scipy.io
 import matplotlib.pyplot as plt
+import scipy.io
 
-def find_closest_centroids(X, centroids):
-	K = np.size(centroids, 0)
-	idx = np.zeros((len(X), 1), dtype=np.int8)
-	##################################################
-	# SEU CODIGO AQUI
-	##################################################
-	return idx
+def normalize_features(X):
+	mu = np.mean(X,axis=0)
+	sigma = np.std(X,axis=0)
+	normalized_X = np.divide(X - mu,sigma)
 
-def compute_centroids(X, idx, K):
-	centroids = np.zeros((K,np.size(X,1)))
-	##################################################
-	# SEU CODIGO AQUI
-	##################################################
-	return centroids
+	return (normalized_X, mu, sigma)
 
-def kmeans_init_centroids(X, K):
-	return X[np.random.choice(X.shape[0], K, replace=False)]
+def pca(X):
+	########################
+	# SEU CODIGO AQUI :
+	# Essa funcao deve retornar U e S, duas das
+	# tres matrizes geradas pela decomposicao
+	# da matriz de covariância de X.
+	########################
+	return (U, S)
 
-def run_kmeans(X, initial_centroids, max_iters, plot_progress=False):
-	K = np.size(initial_centroids, 0)
-	centroids = initial_centroids 
-	previous_centroids = centroids
+def project_data(X, U, K):
+	U_reduce = U[:, 0:K]
+	Z = np.zeros((len(X), K))
+	for i in range(len(X)):
+		x = X[i,:]
+		projection_k = np.dot(x, U_reduce)
+		Z[i] = projection_k
+	return Z
 
-	for iter in range(max_iters):
-		# Assignment of examples do centroids
-		idx = find_closest_centroids(X, centroids)
+def recover_data(Z, U, K):
+	X_rec = np.zeros((len(Z), len(U)))
+	for i in range(len(Z)):
+		v = Z[i,:]
+		for j in range(np.size(U,1)):
+			recovered_j = np.dot(v.T,U[j,0:K])
+			X_rec[i][j] = recovered_j
+	return X_rec
 
-		# PLot the evolution in centroids through the iterations
-		if plot_progress:
-			plt.scatter(X[np.where(idx==0),0],X[np.where(idx==0),1], marker='x')
-			plt.scatter(X[np.where(idx==1),0],X[np.where(idx==1),1], marker='x')
-			plt.scatter(X[np.where(idx==2),0],X[np.where(idx==2),1], marker='x')
-			plt.plot(previous_centroids[:,0], previous_centroids[:,1], 'yo')
-			plt.plot(centroids[:,0], centroids[:,1], 'bo')
-			plt.show()
+def explain_variance(S):
+	########################
+	### SEU CÓDIGO AQUI  ###
+	########################
 
-		previous_centroids = centroids
-
-		# Compute new centroids
-		centroids = compute_centroids(X, idx, K)
-
-	return (centroids, idx)
+	# implement code to print the percentages 
+	# of variation for each dimension.
+	pass
 
 def main():
-	# Find closest centroids
-	raw_mat = scipy.io.loadmat("../data/ex7data2.mat")
+	raw_mat = scipy.io.loadmat("../data/ex7data1.mat")
 	X = raw_mat.get("X")
-
-	K = 3
-
-	# Fixed seeds (i.e., initial centroids)
-	initial_centroids = np.array([[3, 3], [6, 2], [8, 5]])
-	idx = find_closest_centroids(X, initial_centroids)
-
-	# Plot initial assignments.
-	plt.scatter(X[np.where(idx==0),0],X[np.where(idx==0),1], marker='x')
-	plt.scatter(X[np.where(idx==1),0],X[np.where(idx==1),1], marker='x')
-	plt.scatter(X[np.where(idx==2),0],X[np.where(idx==2),1], marker='x')
-	plt.title('Initial assignments')
+	plt.cla()
+	plt.plot(X[:,0], X[:,1], 'bo')
 	plt.show()
 
-	print('Cluster assignments for the first, second and third examples: ' + str(idx[0:3].flatten()))
+	X_norm, mu, sigma = normalize_features(X)
+	U, S = pca(X_norm)
 
-	# Compute initial means
-	centroids = compute_centroids(X, idx, K)
+	plt.cla()
+	plt.axis('equal')
+	plt.plot(X_norm[:,0], X_norm[:,1], 'bo')
 
-	# Now run 10 iterations of K-means on fixed seeds
-	initial_centroids = np.array([[3, 3], [6, 2], [8, 5]])
-	#initial_centroids = kmeans_init_centroids(X, K)
-	max_iters = 10
-	centroids, idx = run_kmeans(X, initial_centroids, max_iters, plot_progress=False)
-	print('Centroids after the 1st update:\n' + str(centroids))
-
-	# Plot final clustering.
-	plt.scatter(X[np.where(idx==0),0],X[np.where(idx==0),1], marker='x')
-	plt.scatter(X[np.where(idx==1),0],X[np.where(idx==1),1], marker='x')
-	plt.scatter(X[np.where(idx==2),0],X[np.where(idx==2),1], marker='x')
-	plt.title('Final clustering')
+	K = 2
+	for axis, color in zip(U[:K], ["yellow","green"]):
+		start, end = np.zeros(2), (mu + sigma * axis)[:K] - (mu)[:K]
+		plt.annotate('', xy=end,xytext=start, arrowprops=dict(facecolor=color, width=1.0))
+	plt.axis('equal')
 	plt.show()
 
-	#####################################################################
-	# SEU CODIGO AQUI: repita a execucao acima,
-	# desta vez iniciando o centroides de forma aleatoria.
-	# Para isso, use a função kmeans_init_centroids.
-	#####################################################################
+	K = 1
+	Z = project_data(X_norm, U, K)
+	X_rec = recover_data(Z, U, K)
 
+	plt.cla()
+	plt.plot(X_norm[:,0], X_norm[:,1], 'bo')
+	plt.plot(X_rec[:,0], X_rec[:,1], 'rx')
+	plt.axis('equal')
+	plt.show()
+
+	explain_variance(S)
 
 if __name__ == "__main__":
 	main()
